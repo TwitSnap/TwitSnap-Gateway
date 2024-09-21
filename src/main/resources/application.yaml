@@ -1,9 +1,13 @@
 # Gateway Configuration:
+server:
+  port: ${SERVER_PORT}
+
+# Logger Configuration:
 logging:
   file:
-    name: logs/app.log
+    name: ${LOG_PATH}
   level:
-    org.springframework.cloud.gateway: DEBUG
+    org.springframework.cloud.gateway: ${LOG_LEVEL}
 
 # Gateway Routes:
 spring:
