@@ -1,0 +1,16 @@
+# Gateway Configuration:
+logging:
+  file:
+    name: logs/app.log
+  level:
+    org.springframework.cloud.gateway: DEBUG
+
+# Gateway Routes:
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: my_route
+          uri: http://localhost:8080
+          predicates:
+            - Path=/my_route/**
