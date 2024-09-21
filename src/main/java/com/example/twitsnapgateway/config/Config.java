@@ -8,11 +8,16 @@ public class Config {
      * as system properties.
      */
     public static void setEnv(){
-        Dotenv dotenv = Dotenv.load();
+        try {
+            Dotenv dotenv = Dotenv.load();
 
-        setProperty("SERVER_PORT", dotenv.get("SERVER_PORT"));
-        setProperty("LOG_PATH", dotenv.get("LOG_PATH"));
-        setProperty("LOG_LEVEL", dotenv.get("LOG_LEVEL"));
+            setProperty("SERVER_PORT", dotenv.get("SERVER_PORT"));
+            setProperty("LOG_PATH", dotenv.get("LOG_PATH"));
+            setProperty("LOG_LEVEL", dotenv.get("LOG_LEVEL"));
+        } catch(Exception e){
+            System.out.println("Error loading environment variables: " + e.getMessage());
+            System.exit(1);
+        }
     }
 
     /**
