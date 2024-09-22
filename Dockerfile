@@ -24,9 +24,6 @@ FROM openjdk:21-jdk-slim
 # Establecer el directorio de trabajo
 WORKDIR /app
 
-# Ver el contenido del directorio
-RUN echo ls -ltrha /app
-
 # Copiar el jar generado desde la imagen de build, ademas del .env
 COPY --from=build /app/build/libs/*.jar app.jar
 COPY --from=build /app/.env .env
