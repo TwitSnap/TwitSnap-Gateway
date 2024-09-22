@@ -22,6 +22,12 @@ import org.slf4j.LoggerFactory;
 public class TrafficLoggingFilter implements GlobalFilter, Ordered {
     private static final Logger logger = LoggerFactory.getLogger("TrafficLogger");
 
+    /**
+     * Filter method that logs the incoming request, outgoing response, service request, and service request errors.
+     * @param exchange The server web exchange object.
+     * @param chain The gateway filter chain.
+     * @return A mono void.
+     */
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         ServerHttpRequest request = exchange.getRequest();
@@ -42,6 +48,10 @@ public class TrafficLoggingFilter implements GlobalFilter, Ordered {
         }).then();
     }
 
+    /**
+     * Get the order of the filter.
+     * @return The order of the filter.
+     */
     @Override
     public int getOrder() {
         return -1;
