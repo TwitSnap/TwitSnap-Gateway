@@ -54,7 +54,7 @@
     </appender>
 
     <!-- Root logger for remaining logs -->
-    <root level="${ROOT_LOGGER_LEVEL}">
+    <root level="${ROOT_LOG_LEVEL}">
         <appender-ref ref="CONSOLE"/>
         <appender-ref ref="GENERAL"/>
     </root>

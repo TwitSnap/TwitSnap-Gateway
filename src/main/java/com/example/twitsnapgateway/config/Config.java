@@ -31,7 +31,7 @@ public class Config {
         setProperty(("MAX_TRAFFIC_LOGS"), dotenv.get("MAX_TRAFFIC_LOGS"));
         setProperty(("TRAFFIC_ROTATED_LOG_PATTERN"), dotenv.get("TRAFFIC_ROTATED_LOG_PATTERN"));
         setProperty(("TRAFFIC_LOG_PATTERN"), dotenv.get("TRAFFIC_LOG_PATTERN"));
-        setProperty(("ROOT_LOGGER_LEVEL"), dotenv.get("ROOT_LOGGER_LEVEL"));
+        setProperty(("ROOT_LOG_LEVEL"), dotenv.get("ROOT_LOG_LEVEL"));
     }
 
     /**
