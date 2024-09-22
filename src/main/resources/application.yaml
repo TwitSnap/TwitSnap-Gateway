@@ -11,4 +11,6 @@ spring:
           uri: http://localhost:8080
           predicates:
             - Path=/my_route/**
+          filters:
+            - AuthFilter
 
