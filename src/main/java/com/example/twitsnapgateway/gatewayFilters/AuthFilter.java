@@ -25,7 +25,7 @@ public class AuthFilter extends AbstractGatewayFilterFactory<AuthFilter.Config> 
             String token = exchange.getRequest().getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
 
             // ? 2. Si es token no es null y arranca con la keyword "Bearer ", entonces lo valido.
-            if (token != null && token.startsWith("Bearer ")) {
+            if (isTokenValid(token)) {
                 // ? 2.1. Obtengo el token sin la keyword "Bearer ".
                 String jwtToken = token.substring(7);
 
@@ -43,6 +43,10 @@ public class AuthFilter extends AbstractGatewayFilterFactory<AuthFilter.Config> 
             exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
             return exchange.getResponse().setComplete();
         };
+    }
+
+    private boolean isTokenValid(String token) {
+        return token != null && token.startsWith("Bearer ");
     }
 
     public static class Config {}
