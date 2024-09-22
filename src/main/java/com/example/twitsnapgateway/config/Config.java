@@ -10,14 +10,28 @@ public class Config {
     public static void setEnv(){
         try {
             Dotenv dotenv = Dotenv.load();
-
-            setProperty("SERVER_PORT", dotenv.get("SERVER_PORT"));
-            setProperty("LOG_PATH", dotenv.get("LOG_PATH"));
-            setProperty("LOG_LEVEL", dotenv.get("LOG_LEVEL"));
+            setProperties(dotenv);
         } catch(Exception e){
             System.out.println("Error loading environment variables: " + e.getMessage());
             System.exit(1);
         }
+    }
+
+    private static void setProperties(Dotenv dotenv){
+        setProperty("SERVER_PORT", dotenv.get("SERVER_PORT"));
+
+        setProperty("GENERAL_LOG_PATH", dotenv.get("GENERAL_LOG_PATH"));
+        setProperty("GENERAL_LOG_LEVEL", dotenv.get("GENERAL_LOG_LEVEL"));
+        setProperty(("MAX_GENERAL_LOGS"), dotenv.get("MAX_GENERAL_LOGS"));
+        setProperty(("GENERAL_ROTATED_LOG_PATTERN"), dotenv.get("GENERAL_ROTATED_LOG_PATTERN"));
+        setProperty(("GENERAL_LOG_PATTERN"), dotenv.get("GENERAL_LOG_PATTERN"));
+
+        setProperty(("TRAFFIC_LOG_PATH"), dotenv.get("TRAFFIC_LOG_PATH"));
+        setProperty(("TRAFFIC_LOG_LEVEL"), dotenv.get("TRAFFIC_LOG_LEVEL"));
+        setProperty(("MAX_TRAFFIC_LOGS"), dotenv.get("MAX_TRAFFIC_LOGS"));
+        setProperty(("TRAFFIC_ROTATED_LOG_PATTERN"), dotenv.get("TRAFFIC_ROTATED_LOG_PATTERN"));
+        setProperty(("TRAFFIC_LOG_PATTERN"), dotenv.get("TRAFFIC_LOG_PATTERN"));
+        setProperty(("ROOT_LOGGER_LEVEL"), dotenv.get("ROOT_LOGGER_LEVEL"));
     }
 
     /**

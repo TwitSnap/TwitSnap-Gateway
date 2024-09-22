@@ -2,13 +2,6 @@
 server:
   port: ${SERVER_PORT}
 
-# Logger Configuration:
-logging:
-  file:
-    name: ${LOG_PATH}
-  level:
-    org.springframework.cloud.gateway: ${LOG_LEVEL}
-
 # Gateway Routes:
 spring:
   cloud:
@@ -18,3 +11,4 @@ spring:
           uri: http://localhost:8080
           predicates:
             - Path=/my_route/**
+

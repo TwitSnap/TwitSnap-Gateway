@@ -1,0 +1,62 @@
+<configuration>
+
+    <!-- General Logger - logs generales y errores -->
+    <appender name="GENERAL" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${GENERAL_LOG_PATH}</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${GENERAL_ROTATED_LOG_PATTERN}</fileNamePattern>
+            <maxHistory>${MAX_GENERAL_LOGS}</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${GENERAL_LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Traffic Logger - logs de tráfico HTTP -->
+    <appender name="HTTP" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${TRAFFIC_LOG_PATH}</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${TRAFFIC_ROTATED_LOG_PATTERN}</fileNamePattern>
+            <maxHistory>${MAX_TRAFFIC_LOGS}</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${TRAFFIC_LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Configuracion el nivel de logs generales -->
+    <logger name="org.springframework" level="${GENERAL_LOG_LEVEL}" additivity="false">
+        <appender-ref ref="GENERAL"/>
+    </logger>
+
+    <logger name="com.example.twitsnapgateway" level="${GENERAL_LOG_LEVEL}" additivity="false">
+        <appender-ref ref="GENERAL"/>
+    </logger>
+
+    <logger name="org.springframework.cloud.gateway" level="${GENERAL_LOG_LEVEL}" additivity="false">
+        <appender-ref ref="GENERAL"/>
+    </logger>
+
+    <logger name="org.springframework.http.server" level="${GENERAL_LOG_LEVEL}" additivity="false">
+        <appender-ref ref="GENERAL"/>
+    </logger>
+
+    <!-- Configuracion el nivel de logs para HTTP (solicitudes y respuestas) -->
+    <logger name="TrafficLogger" level="${TRAFFIC_LOG_LEVEL}" additivity="false">
+        <appender-ref ref="HTTP"/>
+    </logger>
+
+    <!-- Console output for all logs -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Root logger for remaining logs -->
+    <root level="${ROOT_LOGGER_LEVEL}">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="GENERAL"/>
+    </root>
+
+</configuration>
