@@ -4,8 +4,9 @@ import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
+
 
 public class AuthFilter extends AbstractGatewayFilterFactory<AuthFilter.Config> {
     private final RestTemplate restTemplate;
@@ -29,18 +30,31 @@ public class AuthFilter extends AbstractGatewayFilterFactory<AuthFilter.Config> 
                 // ? 2.1. Obtengo el token sin la keyword "Bearer ".
                 String jwtToken = token.substring(7);
 
-                // ? 2.2. Envio el token al servicio de autenticación para que lo valide.
-                // TODO: Definir en una envVar el endpoint de autenticación.
-                ResponseEntity<Void> response = restTemplate.getForEntity((authServiceUrl + "/v1/auth/" + jwtToken), Void.class);
+                try {
+                    // ? 2.2. Envio el token al servicio de autenticación para que lo valide.
+                    // TODO: Definir en una envVar el endpoint de autenticación.
+                    restTemplate.getForEntity((authServiceUrl + "/v1/auth/" + jwtToken), Void.class);
 
-                // ? 2.3. Si la respuesta es 2xx, entonces el token es válido y se permite el acceso.
-                if (response.getStatusCode().is2xxSuccessful()) {
+                    // ? 2.2.1. Si el token es válido no se levantara ninguna excepcion, entonces se continua con el flujo normal.
                     return chain.filter(exchange);
+                } catch (HttpClientErrorException e){
+                    // ? 2.3. Si se levanto una excepcion porque la respuesta es de tipo 401, entonces el token no es válido y se responde con un 401.
+                    if (e.getStatusCode() == HttpStatus.UNAUTHORIZED) {
+                        System.out.println("Token is not valid: " + e.getMessage());
+                        exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
+                    } else {
+                        // ? 2.4. Si la respuesta no es de tipo 401, entonces se responde con un 500.
+                        System.out.println("Internal server error: " + e.getMessage());
+                        exchange.getResponse().setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR);
+                    }
+
+                    return exchange.getResponse().setComplete();
                 }
             }
 
-            // ? 3. Si el token no llego en la request o no es válido, entonces se responde con un 401.
-            exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
+            // ? 3. Si el token no llego en la request entonces se responde con un 400.
+            System.out.println("Token was not received");
+            exchange.getResponse().setStatusCode(HttpStatus.BAD_REQUEST);
             return exchange.getResponse().setComplete();
         };
     }

@@ -41,7 +41,7 @@ public class TrafficLoggingFilter implements GlobalFilter, Ordered {
             logger.info("Outgoing Response -> Status code: {}", response.getStatusCode());
         })).doOnSuccess(aVoid -> {
             // ? Log the request made by the gateway to a service
-            logger.info("Request to Service -> Method: {}, URI: {}", request.getMethod(), request.getURI());
+            logger.info("Request sent to Service -> Method: {}, URI: {}", request.getMethod(), request.getURI());
         }).doOnError(throwable -> {
             // ? Log any errors that occur during service requests
             logger.error("Error during service request: {}", throwable.getMessage());
