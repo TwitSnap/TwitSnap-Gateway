@@ -9,8 +9,8 @@ public class Config {
      */
     public static void setEnv(){
         try {
-            Dotenv dotenv = Dotenv.load();
-            setProperties(dotenv);
+            //Dotenv dotenv = Dotenv.load();
+            setProperties(null);
         } catch(Exception e){
             System.out.println("Error loading environment variables: " + e.getMessage());
             System.exit(1);
@@ -18,6 +18,7 @@ public class Config {
     }
 
     private static void setProperties(Dotenv dotenv){
+        //setProperty("SERVER_HOST", dotenv.get("SERVER_HOST"));
         setProperty("SERVER_PORT", System.getenv("SERVER_PORT"));
 
         setProperty("GENERAL_LOG_PATH", System.getenv("GENERAL_LOG_PATH"));
