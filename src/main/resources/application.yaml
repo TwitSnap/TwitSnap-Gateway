@@ -17,3 +17,15 @@ spring:
           uri: https://twitsnap-auth-api.onrender.com
           predicates:
             - Path=/v1/auth/**
+        - id: GetUserMe
+          uri: https://twitsnap-user-api.onrender.com
+          predicates: 
+            - Path=/api/v1/users/**
+          filters:
+            - AuthFilter
+        - id: RegisterUser
+          uri: https://twitsnap-user-api.onrender.com
+          predicates:
+            - Path=/api/v1/register/**
+
+
