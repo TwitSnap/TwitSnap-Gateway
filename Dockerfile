@@ -14,6 +14,7 @@ COPY src src
 
 # Dar permisos de ejecución al script gradlew
 RUN chmod +x gradlew
+
 # Construir la aplicación
 RUN ./gradlew build -x test
 
