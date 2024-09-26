@@ -18,20 +18,20 @@ public class Config {
     }
 
     private static void setProperties(Dotenv dotenv){
-        setProperty("SERVER_PORT", dotenv.get("SERVER_PORT"));
+        setProperty("SERVER_PORT", System.getenv("SERVER_PORT"));
 
-        setProperty("GENERAL_LOG_PATH", dotenv.get("GENERAL_LOG_PATH"));
-        setProperty("GENERAL_LOG_LEVEL", dotenv.get("GENERAL_LOG_LEVEL"));
-        setProperty(("MAX_GENERAL_LOGS"), dotenv.get("MAX_GENERAL_LOGS"));
-        setProperty(("GENERAL_ROTATED_LOG_PATTERN"), dotenv.get("GENERAL_ROTATED_LOG_PATTERN"));
-        setProperty(("GENERAL_LOG_PATTERN"), dotenv.get("GENERAL_LOG_PATTERN"));
+        setProperty("GENERAL_LOG_PATH", System.getenv("GENERAL_LOG_PATH"));
+        setProperty("GENERAL_LOG_LEVEL", System.getenv("GENERAL_LOG_LEVEL"));
+        setProperty(("MAX_GENERAL_LOGS"), System.getenv("MAX_GENERAL_LOGS"));
+        setProperty(("GENERAL_ROTATED_LOG_PATTERN"), System.getenv("GENERAL_ROTATED_LOG_PATTERN"));
+        setProperty(("GENERAL_LOG_PATTERN"), System.getenv("GENERAL_LOG_PATTERN"));
 
-        setProperty(("TRAFFIC_LOG_PATH"), dotenv.get("TRAFFIC_LOG_PATH"));
-        setProperty(("TRAFFIC_LOG_LEVEL"), dotenv.get("TRAFFIC_LOG_LEVEL"));
-        setProperty(("MAX_TRAFFIC_LOGS"), dotenv.get("MAX_TRAFFIC_LOGS"));
-        setProperty(("TRAFFIC_ROTATED_LOG_PATTERN"), dotenv.get("TRAFFIC_ROTATED_LOG_PATTERN"));
-        setProperty(("TRAFFIC_LOG_PATTERN"), dotenv.get("TRAFFIC_LOG_PATTERN"));
-        setProperty(("ROOT_LOG_LEVEL"), dotenv.get("ROOT_LOG_LEVEL"));
+        setProperty(("TRAFFIC_LOG_PATH"), System.getenv("TRAFFIC_LOG_PATH"));
+        setProperty(("TRAFFIC_LOG_LEVEL"), System.getenv("TRAFFIC_LOG_LEVEL"));
+        setProperty(("MAX_TRAFFIC_LOGS"), System.getenv("MAX_TRAFFIC_LOGS"));
+        setProperty(("TRAFFIC_ROTATED_LOG_PATTERN"), System.getenv("TRAFFIC_ROTATED_LOG_PATTERN"));
+        setProperty(("TRAFFIC_LOG_PATTERN"), System.getenv("TRAFFIC_LOG_PATTERN"));
+        setProperty(("ROOT_LOG_LEVEL"), System.getenv("ROOT_LOG_LEVEL"));
     }
 
     /**
