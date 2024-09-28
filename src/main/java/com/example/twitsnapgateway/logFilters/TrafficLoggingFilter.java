@@ -11,6 +11,8 @@ import reactor.core.publisher.Mono;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.function.Consumer;
+
 /**
  * A global traffic logging filter for Spring Cloud Gateway that logs:
  * 1. Incoming requests received by the gateway.
@@ -33,19 +35,35 @@ public class TrafficLoggingFilter implements GlobalFilter, Ordered {
         ServerHttpRequest request = exchange.getRequest();
 
         // ? Log the incoming request
-        logger.info("Incoming Request -> Method: {}, URI: {}", request.getMethod(), request.getURI());
+        String incomingRequestLog = String.format("Incoming Request -> Method: %s, URI: %s", request.getMethod(), request.getURI());
+        log(incomingRequestLog, logger::info);
 
         return chain.filter(exchange).then(Mono.fromRunnable(() -> {
             // ? Process the request and log the outgoing response
             ServerHttpResponse response = exchange.getResponse();
-            logger.info("Outgoing Response -> Status code: {}", response.getStatusCode());
+
+            String outgoingResponseLog = String.format("Outgoing Response -> Status code: %s", response.getStatusCode());
+            log(outgoingResponseLog, logger::info);
         })).doOnSuccess(aVoid -> {
             // ? Log the request made by the gateway to a service
-            logger.info("Request sent to Service -> Method: {}, URI: {}", request.getMethod(), request.getURI());
+            String requestToServiceLog = String.format("Request sent to Service -> Method: %s, URI: %s", request.getMethod(), request.getURI());
+            log(requestToServiceLog, logger::info);
         }).doOnError(throwable -> {
             // ? Log any errors that occur during service requests
-            logger.error("Error during service request: {}", throwable.getMessage());
+            String errorLog = String.format("Error during service request: %s", throwable.getMessage());
+            log(errorLog, logger::error);
         }).then();
+    }
+
+    /**
+     * Log a message using a provided lambda for the log type, and also print to stdout.
+     *
+     * @param logString The message to log.
+     * @param logAction A lambda function that specifies the type of log (e.g., info, error).
+     */
+    private void log(String logString, Consumer<String> logAction) {
+        logAction.accept(logString);
+        System.out.println(logString);
     }
 
     /**
