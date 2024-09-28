@@ -7,13 +7,19 @@ spring:
   cloud:
     gateway:
       routes:
-        - id: Ejemplo_Borrar
-          uri: http://localhost:4000
-          predicates:
-            - Path=/hola/**
-          filters:
-            - AuthFilter
-        - id: LoginRegister
+        - id: Auth-[auth,logIn,register]
           uri: https://twitsnap-auth-api.onrender.com
           predicates:
             - Path=/v1/auth/**
+        - id: Users-[users]
+          uri: https://twitsnap-user-api.onrender.com
+          predicates: 
+            - Path=/api/v1/users/**
+          filters:
+            - AuthFilter
+        - id: Users-[Register]
+          uri: https://twitsnap-user-api.onrender.com
+          predicates:
+            - Path=/api/v1/register/**
+
+
