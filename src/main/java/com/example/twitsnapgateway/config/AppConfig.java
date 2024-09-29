@@ -14,7 +14,6 @@ public class AppConfig {
 
     @Bean
     public AuthFilter authFilter(RestTemplate restTemplate) {
-        // TODO: Definir en una envVar el endpoint de autenticación.
-        return new AuthFilter(restTemplate, "http://localhost:5000");
+        return new AuthFilter(restTemplate, System.getProperty("AUTH_MS_URI"));
     }
 }
