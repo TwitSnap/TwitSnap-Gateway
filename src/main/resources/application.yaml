@@ -12,13 +12,13 @@ spring:
           predicates:
             - Path=/v1/auth/**
         - id: Users-[users]
-          uri: https://twitsnap-user-api.onrender.com
+          uri: https://twitsnap-user-api-af1u.onrender.com
           predicates: 
             - Path=/api/v1/users/**
           filters:
             - AuthFilter
         - id: Users-[Register]
-          uri: https://twitsnap-user-api.onrender.com
+          uri: https://twitsnap-user-api-af1u.onrender.com
           predicates:
             - Path=/api/v1/register/**
 
