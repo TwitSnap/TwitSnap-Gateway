@@ -38,6 +38,8 @@ public class Config {
         setEnvVar("TRAFFIC_LOG_PATTERN", dotenv);
 
         setEnvVar("ROOT_LOG_LEVEL", dotenv);
+        setEnvVar("AUTH_MS_URI", dotenv);
+        setEnvVar("USERS_MS_URI", dotenv);
     }
 
     /**

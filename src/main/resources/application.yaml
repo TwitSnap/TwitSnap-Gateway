@@ -8,17 +8,17 @@ spring:
     gateway:
       routes:
         - id: Auth-[auth,logIn,register]
-          uri: https://twitsnap-auth-api.onrender.com
+          uri: ${AUTH_MS_URI}
           predicates:
             - Path=/v1/auth/**
         - id: Users-[users]
-          uri: https://twitsnap-user-api-af1u.onrender.com
+          uri: ${USERS_MS_URI}
           predicates: 
             - Path=/api/v1/users/**
           filters:
             - AuthFilter
         - id: Users-[Register]
-          uri: https://twitsnap-user-api-af1u.onrender.com
+          uri: ${USERS_MS_URI}
           predicates:
             - Path=/api/v1/register/**
 
