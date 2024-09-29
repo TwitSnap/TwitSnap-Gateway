@@ -22,8 +22,8 @@ public class Config {
     }
 
     private static void setProperties(Dotenv dotenv) {
-        setEnvVar("SERVER_HOST", dotenv);
         setEnvVar("SERVER_PORT", dotenv);
+        setEnvVar("SERVER_HOST", dotenv);
 
         setEnvVar("GENERAL_LOG_PATH", dotenv);
         setEnvVar("GENERAL_LOG_LEVEL", dotenv);
@@ -50,7 +50,9 @@ public class Config {
      * @param dotenv The Dotenv object that holds the .env variables (can be null).
      */
     private static void setEnvVar(String key, Dotenv dotenv) {
-        setProperty(key, () -> dotenv != null ? dotenv.get(key) : System.getenv(key));
+        // ? La funcion supplier sera dotenv.get() si dotenv no es null, o System.getenv si dotenv si es null
+        ValueSupplier supplier = () -> dotenv != null ? dotenv.get(key) : System.getenv(key);
+        setProperty(key, supplier);
     }
 
     /**
@@ -69,7 +71,6 @@ public class Config {
      */
     private static void setProperty(String key, ValueSupplier valueSupplier) {
         String value = valueSupplier.getValue();
-
         if (value != null) System.setProperty(key, value);
     }
 }
