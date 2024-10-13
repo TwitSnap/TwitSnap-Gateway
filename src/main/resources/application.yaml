@@ -21,5 +21,12 @@ spring:
           uri: ${USERS_MS_URI}
           predicates:
             - Path=/api/v1/register/**
+        - id: Twits
+          uri: ${TWIT_MS_URI}
+          predicates:
+            - Path=/v1/twit/**
+          filters:
+            - AuthFilter
+            
 
 
