@@ -40,6 +40,7 @@ public class Config {
         setEnvVar("ROOT_LOG_LEVEL", dotenv);
         setEnvVar("AUTH_MS_URI", dotenv);
         setEnvVar("USERS_MS_URI", dotenv);
+        setEnvVar("TWIT_MS_URI",dotenv);
     }
 
     /**
