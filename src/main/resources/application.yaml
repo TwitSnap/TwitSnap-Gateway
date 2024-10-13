@@ -7,16 +7,18 @@ spring:
   cloud:
     gateway:
       routes:
-        - id: Auth-[auth,logIn,register]
+        - id: Auth-[auth,logIn,register,password]
           uri: ${AUTH_MS_URI}
           predicates:
             - Path=/v1/auth/**
+
         - id: Users-[users]
           uri: ${USERS_MS_URI}
           predicates: 
             - Path=/api/v1/users/**
           filters:
             - AuthFilter
+
         - id: Users-[Register]
           uri: ${USERS_MS_URI}
           predicates:
