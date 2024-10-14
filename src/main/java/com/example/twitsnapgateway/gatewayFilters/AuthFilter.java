@@ -37,6 +37,7 @@ public class AuthFilter extends AbstractGatewayFilterFactory<AuthFilter.Config> 
 
                     // ? 2.2.1. Si el token es válido no se levantara ninguna excepcion, entonces obtengo el userId y lo agrego al header de la request.
                     String userId = response.getBody();
+                    System.out.println("Body: " + userId);
                     exchange = addUserIdHeader(exchange, userId);
                     System.out.println("Headers: " + exchange.getRequest().getHeaders());
 
