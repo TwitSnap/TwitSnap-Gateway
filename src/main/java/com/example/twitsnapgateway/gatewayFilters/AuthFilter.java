@@ -1,5 +1,7 @@
 package com.example.twitsnapgateway.gatewayFilters;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.http.HttpHeaders;
@@ -8,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ServerWebExchange;
-
 
 public class AuthFilter extends AbstractGatewayFilterFactory<AuthFilter.Config> {
     private final RestTemplate restTemplate;
@@ -32,12 +33,23 @@ public class AuthFilter extends AbstractGatewayFilterFactory<AuthFilter.Config> 
                 String jwtToken = token.substring(7);
 
                 try {
-                    // ? 2.2. Envio el token al servicio de autenticación para que lo valide.
+                    // ? 2.2. Envio el token al servicio de autenticación para que lo valide. Si el token es válido no se levantara ninguna excepcion porque devolvera un 2xx.
                     ResponseEntity<String> response = restTemplate.getForEntity((authServiceUrl + System.getProperty("AUTH_MS_AUTH_PATH") + jwtToken), String.class);
 
-                    // ? 2.2.1. Si el token es válido no se levantara ninguna excepcion, entonces obtengo el userId y lo agrego al header de la request.
-                    String userId = response.getBody();
-                    System.out.println("Body: " + userId);
+                    // ? 2.2.1. Obtengo el userId del body y lo agrego al header de la request.
+                    String userId;
+
+                    try {
+                        ObjectMapper objectMapper = new ObjectMapper();
+                        JsonNode jsonNode = objectMapper.readTree(response.getBody());
+                        userId = jsonNode.get("userId").asText();
+                    } catch(Exception e) {
+                        // ? Si no se pudo obtener el userId del body, entonces se setea como vacio.
+                        // ? Esto se hace asi debido a que la gran mayoria de endpoints del sistema no requieren el userId asi que no vale la pena hacer que todos los endpoints
+                        // ? fallen si el gateway no puede resolver el userId. Los endpoints que usen el userId deberan validar que el header userId no sea vacio.
+                        userId = "";
+                    }
+
                     exchange = addUserIdHeader(exchange, userId);
                     System.out.println("Headers: " + exchange.getRequest().getHeaders());
 
