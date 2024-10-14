@@ -4,8 +4,10 @@ import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.server.ServerWebExchange;
 
 
 public class AuthFilter extends AbstractGatewayFilterFactory<AuthFilter.Config> {
@@ -15,7 +17,6 @@ public class AuthFilter extends AbstractGatewayFilterFactory<AuthFilter.Config> 
     public AuthFilter(RestTemplate restTemplate, String authServiceUrl) {
         super(Config.class);
         this.restTemplate = restTemplate;
-        // TODO: Definir en una envVar authServiceUrl.
         this.authServiceUrl = authServiceUrl;
     }
 
@@ -33,9 +34,13 @@ public class AuthFilter extends AbstractGatewayFilterFactory<AuthFilter.Config> 
                 try {
                     // ? 2.2. Envio el token al servicio de autenticación para que lo valide.
                     // TODO: Definir en una envVar el endpoint de autenticación.
-                    restTemplate.getForEntity((authServiceUrl + "/v1/auth/" + jwtToken), Void.class);
+                    ResponseEntity<String> response = restTemplate.getForEntity((authServiceUrl + System.getProperty("AUTH_MS_AUTH_PATH") + jwtToken), String.class);
 
-                    // ? 2.2.1. Si el token es válido no se levantara ninguna excepcion, entonces se continua con el flujo normal.
+                    // ? 2.2.1. Si el token es válido no se levantara ninguna excepcion, entonces obtengo el userId y lo agrego al header de la request.
+                    String userId = response.getBody();
+                    exchange = addUserIdHeader(exchange, userId);
+
+                    // ? 2.2.2. Y se redirige la request al destino.
                     return chain.filter(exchange);
                 } catch (HttpClientErrorException e){
                     // ? 2.3. Si se levanto una excepcion porque la respuesta es de tipo 401, entonces el token no es válido y se responde con un 401.
@@ -57,6 +62,10 @@ public class AuthFilter extends AbstractGatewayFilterFactory<AuthFilter.Config> 
             exchange.getResponse().setStatusCode(HttpStatus.BAD_REQUEST);
             return exchange.getResponse().setComplete();
         };
+    }
+    
+    private ServerWebExchange addUserIdHeader(ServerWebExchange exchange, String userId) {
+        return exchange.mutate().request(r -> r.headers(headers -> headers.add("userId", userId))).build();
     }
 
     private boolean isTokenValid(String token) {
