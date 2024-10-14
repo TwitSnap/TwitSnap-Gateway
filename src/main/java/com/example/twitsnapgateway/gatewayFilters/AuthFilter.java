@@ -33,7 +33,6 @@ public class AuthFilter extends AbstractGatewayFilterFactory<AuthFilter.Config> 
 
                 try {
                     // ? 2.2. Envio el token al servicio de autenticación para que lo valide.
-                    // TODO: Definir en una envVar el endpoint de autenticación.
                     ResponseEntity<String> response = restTemplate.getForEntity((authServiceUrl + System.getProperty("AUTH_MS_AUTH_PATH") + jwtToken), String.class);
 
                     // ? 2.2.1. Si el token es válido no se levantara ninguna excepcion, entonces obtengo el userId y lo agrego al header de la request.
