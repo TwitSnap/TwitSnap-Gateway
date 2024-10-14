@@ -39,6 +39,7 @@ public class AuthFilter extends AbstractGatewayFilterFactory<AuthFilter.Config> 
                     // ? 2.2.1. Si el token es válido no se levantara ninguna excepcion, entonces obtengo el userId y lo agrego al header de la request.
                     String userId = response.getBody();
                     exchange = addUserIdHeader(exchange, userId);
+                    System.out.println("Headers: " + exchange.getRequest().getHeaders());
 
                     // ? 2.2.2. Y se redirige la request al destino.
                     return chain.filter(exchange);
@@ -65,7 +66,7 @@ public class AuthFilter extends AbstractGatewayFilterFactory<AuthFilter.Config> 
     }
     
     private ServerWebExchange addUserIdHeader(ServerWebExchange exchange, String userId) {
-        return exchange.mutate().request(r -> r.headers(headers -> headers.add("userId", userId))).build();
+            return exchange.mutate().request(r -> r.header("userId", userId)).build();
     }
 
     private boolean isTokenValid(String token) {
