@@ -31,5 +31,9 @@ spring:
           filters:
             - AuthFilter
             
-
-
+        - id: Chat 
+          uri: ${CHAT_MS_URI}
+          predicates:
+            - Path=/api/v1/chats/**
+          filters:
+            - AuthFilter
