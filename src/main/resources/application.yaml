@@ -34,7 +34,7 @@ spring:
         - id: Chat-[API Websocket]
           uri: ${CHAT_MS_WS_URI}
           predicates:
-            - Path=/api/v1/chats/**
+            - Path=/api/v1/chats/websocket
           filters:
             - AuthFilter
             
