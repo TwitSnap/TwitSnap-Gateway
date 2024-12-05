@@ -15,6 +15,10 @@ public class TwitSnapGatewayApplication{
     }
 
 
+    @Bean
+    public MeterRegistryCustomizer<MeterRegistry> metricsCommonTags() {
+        return (registry) -> registry.config().commonTags("region", "us-east-1");
+    }
 
 
 }
