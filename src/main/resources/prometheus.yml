@@ -6,6 +6,9 @@ scrape_configs:
       - targets: ["localhost:8081"]
         labels:
           application: "My Spring Boot Application"
+    basic_auth:
+      username: "admin"
+      password: "password"
 
 remote_write:
   - url: "https://prometheus-prod-36-prod-us-west-0.grafana.net/api/prom/push"
