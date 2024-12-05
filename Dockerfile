@@ -29,4 +29,4 @@ COPY --from=build /app/build/libs/*.jar app.jar
 #COPY --from=build /app/.env .env
 
 # Comando para ejecutar la aplicación
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java","-javaagent:./newrelic/newrelic.jar" ,"-jar", "app.jar"]
