@@ -1,5 +1,7 @@
 package com.example.twitsnapgateway.gatewayFilters;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.http.HttpHeaders;
@@ -9,8 +11,9 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ServerWebExchange;
 
-
 public class AuthFilter extends AbstractGatewayFilterFactory<AuthFilter.Config> {
+    final String USER_ID_HEADER = "user_id";
+
     private final RestTemplate restTemplate;
     private final String authServiceUrl;
 
@@ -32,15 +35,27 @@ public class AuthFilter extends AbstractGatewayFilterFactory<AuthFilter.Config> 
                 String jwtToken = token.substring(7);
 
                 try {
-                    // ? 2.2. Envio el token al servicio de autenticación para que lo valide.
-                    // TODO: Definir en una envVar el endpoint de autenticación.
+                    // ? 2.2.0. Envio el token al servicio de autenticación para que lo valide. Si el token es válido no se levantara ninguna excepcion porque devolvera un 2xx.
                     ResponseEntity<String> response = restTemplate.getForEntity((authServiceUrl + System.getProperty("AUTH_MS_AUTH_PATH") + jwtToken), String.class);
 
-                    // ? 2.2.1. Si el token es válido no se levantara ninguna excepcion, entonces obtengo el userId y lo agrego al header de la request.
-                    String userId = response.getBody();
+                    // ? 2.2.1. Obtengo el userId del body
+                    String userId;
+
+                    try {
+                        ObjectMapper objectMapper = new ObjectMapper();
+                        JsonNode jsonNode = objectMapper.readTree(response.getBody());
+                        userId = jsonNode.get("userId").asText();
+                    } catch(Exception e) {
+                        // ! Si no se pudo obtener el userId del body, entonces se setea como vacio.
+                        // ! Esto se hace asi debido a que la gran mayoria de endpoints del sistema no requieren el userId asi que no vale la pena hacer que todos los endpoints
+                        // ! fallen si el gateway no puede resolver el userId. Los endpoints que usen el userId deberan validar que el header userId no sea vacio.
+                        userId = "";
+                    }
+
+                    // ? 2.2.2. Se agrega el userId como header en la request.
                     exchange = addUserIdHeader(exchange, userId);
 
-                    // ? 2.2.2. Y se redirige la request al destino.
+                    // ? 2.2.3. Y se redirige la request al destino.
                     return chain.filter(exchange);
                 } catch (HttpClientErrorException e){
                     // ? 2.3. Si se levanto una excepcion porque la respuesta es de tipo 401, entonces el token no es válido y se responde con un 401.
@@ -65,7 +80,7 @@ public class AuthFilter extends AbstractGatewayFilterFactory<AuthFilter.Config> 
     }
     
     private ServerWebExchange addUserIdHeader(ServerWebExchange exchange, String userId) {
-        return exchange.mutate().request(r -> r.headers(headers -> headers.add("userId", userId))).build();
+            return exchange.mutate().request(r -> r.header(USER_ID_HEADER, userId)).build();
     }
 
     private boolean isTokenValid(String token) {
