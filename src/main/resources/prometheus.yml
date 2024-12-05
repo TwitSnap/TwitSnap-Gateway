@@ -12,3 +12,7 @@ remote_write:
     basic_auth:
       username: "1942844"
       password: ${GRAFANA_KEY}
+
+basic_auth:
+  username: "admin"
+  password: "admin"
