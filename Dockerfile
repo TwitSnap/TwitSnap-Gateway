@@ -9,6 +9,7 @@ COPY gradlew .
 COPY gradle gradle
 COPY build.gradle .
 COPY settings.gradle .
+COPY newrelic
 #COPY .env .
 COPY src src
 
