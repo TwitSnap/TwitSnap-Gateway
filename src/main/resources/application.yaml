@@ -11,6 +11,11 @@ spring:
           uri: ${AUTH_MS_URI}
           predicates:
             - Path=/v1/auth/**
+            
+        - id: Users-[Interests]
+          uri: ${USERS_MS_URI}
+          predicates: 
+            - Path=/api/v1/interests/
 
         - id: Users-[users]
           uri: ${USERS_MS_URI}
