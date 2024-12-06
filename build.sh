@@ -10,4 +10,4 @@ fi
 
 mv ./build/libs/TwitSnap-Gateway-0.0.1-SNAPSHOT.jar ./app.jar
 
-java -javaagent:./src/newrelic/newrelic.jar -jar app.jar
+java -javaagent:./newrelic/newrelic.jar -jar app.jar
