@@ -32,7 +32,7 @@ RUN pwd && ls
 # Copiar el jar generado desde la imagen de build, ademas del .env
 COPY --from=build /app/build/libs/*.jar app.jar
 #COPY --from=build /app/.env .env
-COPY --from=build newrelic newrelic
+COPY --from=build /app/newrelic newrelic
 
 # Comando para ejecutar la aplicación
 ENTRYPOINT ["java","-javaagent:./newrelic/newrelic.jar" ,"-jar", "app.jar"]
