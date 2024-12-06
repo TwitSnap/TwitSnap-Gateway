@@ -42,6 +42,8 @@ public class Config {
         setEnvVar("USERS_MS_URI", dotenv);
         setEnvVar("TWIT_MS_URI",dotenv);
         setEnvVar("AUTH_MS_AUTH_PATH", dotenv);
+        setEnvVar("CHAT_MS_URI",dotenv);
+        setEnvVar("CHAT_MS_WS_URI",dotenv);
     }
 
     /**

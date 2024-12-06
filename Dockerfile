@@ -9,8 +9,10 @@ COPY gradlew .
 COPY gradle gradle
 COPY build.gradle .
 COPY settings.gradle .
+COPY newrelic newrelic
 #COPY .env .
 COPY src src
+
 
 # Dar permisos de ejecución al script gradlew
 RUN chmod +x gradlew
@@ -24,9 +26,13 @@ FROM openjdk:21-jdk-slim
 # Establecer el directorio de trabajo
 WORKDIR /app
 
+RUN pwd && ls
+
 # Copiar el jar generado desde la imagen de build, ademas del .env
 COPY --from=build /app/build/libs/*.jar app.jar
 #COPY --from=build /app/.env .env
 
+COPY --from=build /app/newrelic newrelic
+
 # Comando para ejecutar la aplicación
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java","-javaagent:./newrelic/newrelic.jar" ,"-jar", "app.jar"]
